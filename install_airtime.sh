@@ -1,22 +1,31 @@
 #!/bin/bash -e
+ 
+# airtime_centos.sh
+#   Original by:  Martin Konecny (http://github.com/mkonecny) 
+#   Updates by:  Aaron Cupp  (https://github.com/IamMrCupp) 
+
 
 if [[ $EUID -ne 0 ]]; then
-    echo "Please run as root user."
+    echo "REQUIRED:  Run as root!  (I'm installing things system wide!!)    ... Exiting."
     exit 1
 fi
 
 mach=`uname -m`
 if [[ "$mach" != "x86_64" ]]; then
-    echo "64-bit installer only"
+    echo "This is a 64-bit installer only!  Please use a modern OS for this application!    ... Exiting."
+    exit 1
 fi
 
 locale | grep "LANG" | grep -i "UTF.*8"
 status=$?
 if [[ "$status" != "0" ]]; then
-    echo "Invalid locale. Must be UTF-8. Exiting.."
+    echo "Invalid locale! Must be using UTF-8 for sanity sake.    ... Exiting." 
     exit 1
 fi
 
+
+#  Time to setup some variables to use for things later in the script
+YUMME="yum -y install"
 
 function randpass() {
   [ "$2" == "0" ] && CHAR="[:alnum:]" || CHAR="[:graph:]"
@@ -75,7 +84,7 @@ function uninstall() {
 
 function install() {
     echo "Installing PHP package dependencies"
-    yum -y install tar gzip curl php-pear postgresql python patch lsof sudo postgresql-server httpd php-pgsql php-gd php wget
+    $YUMME tar gzip curl php-pear postgresql python patch lsof sudo postgresql-server httpd php-pgsql php-gd php wget
 
     echo "* Installing PHP Zend package"
     /usr/bin/pear channel-discover zend.googlecode.com/svn
@@ -91,7 +100,7 @@ function install() {
     #iptables -I INPUT 5 -m tcp -p tcp --dport 80 -j ACCEPT
 
     echo "* Installing python-pip"
-    yum -y install python-pip
+    $YUMME python-pip
 
     echo "* Installing python virtualenv"
     /usr/bin/pip install virtualenv
@@ -162,14 +171,14 @@ function install() {
 
 
     echo "* Installing monit"
-    yum -y install monit
+    $YUMME monit
 
     mkdir -p /etc/monit.d/
     mkdir -p /etc/monit/conf.d
     echo "include /etc/monit/conf.d/*" > /etc/monit.d/monitrc
 
     echo "* Installing RabbitMQ"
-    yum -y install rabbitmq-server
+    $YUMME rabbitmq-server
     #service rabbitmq-server start
        
     locale | grep "LANG" > /etc/default/locale
@@ -187,7 +196,7 @@ function install() {
 
 
     echo "* Installing Liquidsoap"
-    yum -y install ocaml ocaml-findlib.x86_64 libao libao-devel libmad libmad-devel taglib taglib-devel lame lame-devel libvorbis libvorbis-devel libtheora libtheora-devel pcre.x86_64 ocaml-camlp4 ocaml-camlp4-devel.x86_64 pcre pcre-devel gcc-c++ libX11 libX11-devel flac vorbis-tools vorbinsgain.x86_64 mp3gain.x86_64
+    $YUMME ocaml ocaml-findlib.x86_64 libao libao-devel libmad libmad-devel taglib taglib-devel lame lame-devel libvorbis libvorbis-devel libtheora libtheora-devel pcre.x86_64 ocaml-camlp4 ocaml-camlp4-devel.x86_64 pcre pcre-devel gcc-c++ libX11 libX11-devel flac vorbis-tools vorbinsgain.x86_64 mp3gain.x86_64
     
     #wget -O /tmp/pcre-ocaml-6.2.5.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
     wget -O /tmp/pcre-ocaml-LATEST.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
@@ -212,7 +221,7 @@ function install() {
     make install || true
 
     echo "Installing icecast2"
-    yum -y install libxslt-devel.x86_64
+    $YUMME libxslt-devel.x86_64
     wget -O /tmp/icecast-2.3.3.tar.gz http://downloads.xiph.org/releases/icecast/icecast-2.3.3.tar.gz
     cd /tmp
     tar xzf icecast-2.3.3.tar.gz
@@ -248,6 +257,8 @@ function install() {
     echo "* Successful install of Airtime on CentOS!"
 }
 
+
+#  This needs rebuilt BIGTIME!!  wrap it in a case!
 if [[ "$1" == "install" ]]; then
     install
 elif [[ "$1" == "uninstall" ]]; then
@@ -255,3 +266,5 @@ elif [[ "$1" == "uninstall" ]]; then
 else
     echo "install/uninstall parameter required"
 fi
+
+
