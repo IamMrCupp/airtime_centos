@@ -1,19 +1,21 @@
-airtime for CentOS
+#airtime for CentOS
 ==============
 
-This script will install the required applications and libraries to get airtime up and functional on Centos
-
-This has been tested on Centos 6.5
+This script will install all the necessary libraries and applications to compile, setup and run Airtime on CentOS 6.  This should work on all RedHat based systems (fedora, rhel, etc).
   
-The Installer uses the following tools and repos:
   
-* YUM repos:
-  *  Install EPEL	Repo via YUM
-    *  ``` sudo yum install epel-release ```
-  *  Install RepoForge Repo via YUM  
-    *  ``` sudo yum install rpmforge-release ```
+##Required Items
+*  **Install EPEL	Repo via YUM**
+  *  ``` sudo yum -y install epel-release ```
+*  **Install RepoForge Repo via YUM**  
+  *  ``` sudo yum -y install rpmforge-release ```
 
-* tools / libraries / languages:
-  * tar, gzip, curl, php-pear, postgressql, python, path, lsof, sudo, postgresql-server, httpd:w, wget, monit, vorbis-tools, php-pgsql, php-gd, erlang, php, ocaml ocaml-findlib.x86_64 libao libao-devel libmad libmad-devel taglib taglib-devel lame lame-devel libvorbis libvorbis-devel libtheora libtheora-devel pcre.x86_64 ocaml-camlp4 ocaml-camlp4-devel.x86_64 pcre pcre-devel gcc-c++ libX11 libX11-devel flac vorbinsgain.x86_64 mp3gain.x86_64
-
-
+##Installed Items
+* tarballs setup / used by the installer
+  * ```<hold>```
+*  EPEL packages setup / used by installer
+  * ``` <hold> ```
+*  RepoForge packages setup / used by installer
+  * ``` <hold> ```
+*  base packages setup / used by installer
+  * ``` <hold> ```
