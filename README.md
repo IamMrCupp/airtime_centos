@@ -5,9 +5,9 @@ This script will install all the necessary libraries and applications to compile
   
   
 ###Required Items
-*  **_Install_:** EPEL Repo via YUM repos
+*  Install EPEL repository via YUM repos
   *  ``` sudo yum -y install epel-release ```
-*  **_Install_:** RepoForge Repo via YUM repos 
+*  Install RepoForge repository via YUM repos 
   *  ``` sudo yum -y install rpmforge-release ```
 
 ###Installed Items
