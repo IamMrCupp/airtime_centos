@@ -72,14 +72,14 @@ function uninstall() {
     set -e
 }
 
+
 function install() {
     echo "Installing PHP package dependencies"
-    yum -y install tar gzip curl php-pear postgresql python patch lsof sudo \
-    postgresql-server httpd php-pgsql php-gd php wget
+    yum -y install tar gzip curl php-pear postgresql python patch lsof sudo postgresql-server httpd php-pgsql php-gd php wget
 
     echo "* Installing PHP Zend package"
-    pear channel-discover zend.googlecode.com/svn
-    pear install zend/zend
+    /usr/bin/pear channel-discover zend.googlecode.com/svn
+    /usr/bin/pear install zend/zend
 
     echo "* Initializing Postgresql"
     set +e
@@ -91,12 +91,10 @@ function install() {
     #iptables -I INPUT 5 -m tcp -p tcp --dport 80 -j ACCEPT
 
     echo "* Installing python-pip"
-    # this is not valid anymore curl http://python-distribute.org/distribute_setup.py | python
-    curl https://bootstrap.pypa.io/ez_setup.py | python
-    curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+    yum -y install python-pip
 
     echo "* Installing python virtualenv"
-    pip install virtualenv
+    /usr/bin/pip install virtualenv
 
     echo "* Downloading Airtime 2.1.3"
     wget -O /tmp/airtime-2.1.3.tar.gz http://sourceforge.net/projects/airtime/files/2.1.3/airtime-2.1.3.tar.gz
@@ -105,7 +103,6 @@ function install() {
 
     echo "* Creating Airtime virtualenv"
     /tmp/airtime-2.1.3/python_apps/python-virtualenv/virtualenv-install.sh
-
 
     #web files
     echo "* Configuring httpd"
@@ -165,15 +162,6 @@ function install() {
 
 
     echo "* Installing monit"
-    #http://wiki.centos.org/AdditionalResources/Repositories/RPMForge/#head-f0c3ecee3dbb407e4eed79a56ec0ae92d1398e01
-    #http://www.dullnicker.com/dnb/how-to-install-monit-on-centos-5-and-monitor-httpd/
-    wget -O /tmp/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
-    set +e
-    rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
-    set -e
-    rpm -K /tmp/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
-    rpm -i /tmp/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm || true
-    
     yum -y install monit
 
     mkdir -p /etc/monit.d/
@@ -181,11 +169,7 @@ function install() {
     echo "include /etc/monit/conf.d/*" > /etc/monit.d/monitrc
 
     echo "* Installing RabbitMQ"
-    #http://www.rabbitmq.com/install-rpm.html
-    rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-7.noarch.rpm || true
-    yum -y install erlang
-    
-    rpm -Uvh http://www.rabbitmq.com/releases/rabbitmq-server/v2.8.4/rabbitmq-server-2.8.4-1.noarch.rpm
+    yum -y install rabbitmq-server
     #service rabbitmq-server start
        
     locale | grep "LANG" > /etc/default/locale
@@ -205,7 +189,8 @@ function install() {
     echo "* Installing Liquidsoap"
     yum -y install ocaml ocaml-findlib.x86_64 libao libao-devel libmad libmad-devel taglib taglib-devel lame lame-devel libvorbis libvorbis-devel libtheora libtheora-devel pcre.x86_64 ocaml-camlp4 ocaml-camlp4-devel.x86_64 pcre pcre-devel gcc-c++ libX11 libX11-devel flac vorbis-tools vorbinsgain.x86_64 mp3gain.x86_64
     
-    wget -O /tmp/pcre-ocaml-6.2.5.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
+    #wget -O /tmp/pcre-ocaml-6.2.5.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
+    wget -O /tmp/pcre-ocaml-LATEST.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
     cd /tmp
     tar xzf pcre-ocaml-6.2.5.tar.gz
     cd pcre-ocaml-6.2.5
