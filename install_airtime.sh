@@ -111,23 +111,23 @@ function install() {
     tar xzf airtime-2.5.1.tar.gz
 
     echo "* Creating Airtime virtualenv"
-    /tmp/airtime-2.5.1/python_apps/python-virtualenv/virtualenv-install.sh
+    /tmp/Airtime-airtime-2.5.1/python_apps/python-virtualenv/virtualenv-install.sh
 
     #web files
     echo "* Configuring httpd"
-    cp /tmp/airtime-2.5.1/install_full/apache/airtime-vhost /etc/httpd/conf.d/airtime.conf
+    cp /tmp/Airtime-airtime-2.5.1/install_full/apache/airtime-vhost /etc/httpd/conf.d/airtime.conf
     sed -i 's#DocumentRoot.*$#DocumentRoot /var/www/html/airtime/public#g' /etc/httpd/conf.d/airtime.conf
     sed -i 's#<Directory .*$#<Directory /var/www/html/airtime/public>#g' /etc/httpd/conf.d/airtime.conf
 
     echo "* Copying Airtime web files"
     mkdir -p /var/www/html/airtime
-    cp -R /tmp/airtime-2.5.1/airtime_mvc/* /var/www/html/airtime
+    cp -R /tmp/Airtime-airtime-2.5.1/airtime_mvc/* /var/www/html/airtime
 
     mkdir -p /etc/airtime
     mkdir -p /srv/airtime/stor
 
     echo "* Creating Airtime Database"
-    cp /tmp/airtime-2.5.1/airtime_mvc/build/airtime.conf /etc/airtime/airtime.conf
+    cp /tmp/Airtime-airtime-2.5.1/airtime_mvc/build/airtime.conf /etc/airtime/airtime.conf
         
     echo "* Creating airtime user"
     adduser --system --user-group airtime
@@ -139,7 +139,7 @@ function install() {
     sudo -u postgres psql -c "CREATE USER airtime ENCRYPTED PASSWORD 'airtime' LOGIN CREATEDB NOCREATEUSER;"
     sudo -u postgres createdb -O airtime --encoding UTF8 airtime
 
-    cd /tmp/airtime-2.5.1/airtime_mvc/build/sql
+    cd /tmp/Airtime-airtime-2.5.1/airtime_mvc/build/sql
     sudo -u airtime psql --file schema.sql airtime
     sudo -u airtime psql --file sequences.sql airtime
     sudo -u airtime psql --file views.sql airtime
@@ -184,15 +184,15 @@ function install() {
     locale | grep "LANG" > /etc/default/locale
 
     echo "* Installing Airtime services"
-    python /tmp/airtime-2.5.1/python_apps/api_clients/install/api_client_install.py
-    cp -R /tmp/airtime-2.5.1/python_apps/std_err_override /usr/lib/airtime
+    python /tmp/Airtime-airtime-2.5.1/python_apps/api_clients/install/api_client_install.py
+    cp -R /tmp/Airtime-airtime-2.5.1/python_apps/std_err_override /usr/lib/airtime
 
-    python /tmp/airtime-2.5.1/python_apps/media-monitor/install/media-monitor-copy-files.py
-    python /tmp/airtime-2.5.1/python_apps/media-monitor/install/media-monitor-initialize.py
-    python /tmp/airtime-2.5.1/python_apps/pypo/install/pypo-copy-files.py
+    python /tmp/Airtime-airtime-2.5.1/python_apps/media-monitor/install/media-monitor-copy-files.py
+    python /tmp/Airtime-airtime-2.5.1/python_apps/media-monitor/install/media-monitor-initialize.py
+    python /tmp/Airtime-airtime-2.5.1/python_apps/pypo/install/pypo-copy-files.py
     
     #TODO remove dependency on debian liquidsoap 
-    python /tmp/airtime-2.5.1/python_apps/pypo/install/pypo-initialize.py || true
+    python /tmp/Airtime-airtime-2.5.1/python_apps/pypo/install/pypo-initialize.py || true
 
 
     echo "* Installing Liquidsoap"
