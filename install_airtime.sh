@@ -196,7 +196,7 @@ function install() {
 
 
     echo "* Installing Liquidsoap"
-    $YUMME ocaml ocaml-findlib.x86_64 libao libao-devel libmad libmad-devel taglib taglib-devel lame lame-devel libvorbis libvorbis-devel libtheora libtheora-devel pcre.x86_64 ocaml-camlp4 ocaml-camlp4-devel.x86_64 pcre pcre-devel gcc-c++ libX11 libX11-devel flac vorbis-tools vorbinsgain.x86_64 mp3gain.x86_64
+    $YUMME   ocaml ocaml-findlib.x86_64 libao libao-devel libmad libmad-devel taglib taglib-devel lame lame-devel libvorbis libvorbis-devel libtheora libtheora-devel pcre.x86_64 ocaml-camlp4 ocaml-camlp4-devel.x86_64 pcre pcre-devel gcc-c++ libX11 libX11-devel flac vorbis-tools vorbisgain.x86_64 mp3gain.x86_64
     
     #wget -O /tmp/pcre-ocaml-LATEST.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
     cd /tmp
@@ -222,6 +222,7 @@ function install() {
 
     echo "Installing icecast2"
     $YUMME libxslt-devel.x86_64
+    
     #wget -O /tmp/icecast-2.3.3.tar.gz http://downloads.xiph.org/releases/icecast/icecast-2.3.3.tar.gz
     #cd /tmp
     #tar xzf icecast-2.3.3.tar.gz
@@ -231,6 +232,7 @@ function install() {
     #sudo -u pypo make
     #make install || true
 
+    $YUMME icecast
 
     echo "* Setting up init.d scripts"
     #httpd
