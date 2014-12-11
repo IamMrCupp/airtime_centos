@@ -106,7 +106,7 @@ function install() {
     /usr/bin/pip install virtualenv
 
     echo "* Downloading Airtime 2.5.1"
-    wget -O /tmp/airtime-2.5.1.tar.gz http://sourceforge.net/projects/airtime/files/2.5.1/airtime-2.5.1.tar.gz
+    wget -O /tmp/airtime-2.5.1.tar.gz http://sourceforge.net/projects/airtime/files/2.5.1/airtime-2.5.1-ga.tar.gz
     cd /tmp
     tar xzf airtime-2.5.1.tar.gz
 
