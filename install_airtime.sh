@@ -101,6 +101,7 @@ function install() {
 
     echo "* Installing python-pip"
     $YUMME python-pip
+    /usr/bin/pip install configobj
 
     echo "* Installing python virtualenv"
     /usr/bin/pip install virtualenv
