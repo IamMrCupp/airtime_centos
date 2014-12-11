@@ -105,29 +105,29 @@ function install() {
     echo "* Installing python virtualenv"
     /usr/bin/pip install virtualenv
 
-    echo "* Downloading Airtime 2.1.3"
-    wget -O /tmp/airtime-2.1.3.tar.gz http://sourceforge.net/projects/airtime/files/2.1.3/airtime-2.1.3.tar.gz
+    echo "* Downloading Airtime 2.5.1"
+    wget -O /tmp/airtime-2.5.1.tar.gz http://sourceforge.net/projects/airtime/files/2.5.1/airtime-2.5.1.tar.gz
     cd /tmp
-    tar xzf airtime-2.1.3.tar.gz
+    tar xzf airtime-2.5.1.tar.gz
 
     echo "* Creating Airtime virtualenv"
-    /tmp/airtime-2.1.3/python_apps/python-virtualenv/virtualenv-install.sh
+    /tmp/airtime-2.5.1/python_apps/python-virtualenv/virtualenv-install.sh
 
     #web files
     echo "* Configuring httpd"
-    cp /tmp/airtime-2.1.3/install_full/apache/airtime-vhost /etc/httpd/conf.d/airtime.conf
+    cp /tmp/airtime-2.5.1/install_full/apache/airtime-vhost /etc/httpd/conf.d/airtime.conf
     sed -i 's#DocumentRoot.*$#DocumentRoot /var/www/html/airtime/public#g' /etc/httpd/conf.d/airtime.conf
     sed -i 's#<Directory .*$#<Directory /var/www/html/airtime/public>#g' /etc/httpd/conf.d/airtime.conf
 
     echo "* Copying Airtime web files"
     mkdir -p /var/www/html/airtime
-    cp -R /tmp/airtime-2.1.3/airtime_mvc/* /var/www/html/airtime
+    cp -R /tmp/airtime-2.5.1/airtime_mvc/* /var/www/html/airtime
 
     mkdir -p /etc/airtime
     mkdir -p /srv/airtime/stor
 
     echo "* Creating Airtime Database"
-    cp /tmp/airtime-2.1.3/airtime_mvc/build/airtime.conf /etc/airtime/airtime.conf
+    cp /tmp/airtime-2.5.1/airtime_mvc/build/airtime.conf /etc/airtime/airtime.conf
         
     echo "* Creating airtime user"
     adduser --system --user-group airtime
@@ -139,13 +139,13 @@ function install() {
     sudo -u postgres psql -c "CREATE USER airtime ENCRYPTED PASSWORD 'airtime' LOGIN CREATEDB NOCREATEUSER;"
     sudo -u postgres createdb -O airtime --encoding UTF8 airtime
 
-    cd /tmp/airtime-2.1.3/airtime_mvc/build/sql
+    cd /tmp/airtime-2.5.1/airtime_mvc/build/sql
     sudo -u airtime psql --file schema.sql airtime
     sudo -u airtime psql --file sequences.sql airtime
     sudo -u airtime psql --file views.sql airtime
     sudo -u airtime psql --file triggers.sql airtime
     sudo -u airtime psql --file defaultdata.sql airtime
-    sudo -u airtime psql -c "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.1.3');"
+    sudo -u airtime psql -c "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.5.1');"
     sudo -u airtime psql -c "INSERT INTO cc_music_dirs (directory, type) VALUES ('/srv/airtime/stor', 'stor');"
 
     sudo -u airtime psql -c "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', 'UTC')"
@@ -184,33 +184,33 @@ function install() {
     locale | grep "LANG" > /etc/default/locale
 
     echo "* Installing Airtime services"
-    python /tmp/airtime-2.1.3/python_apps/api_clients/install/api_client_install.py
-    cp -R /tmp/airtime-2.1.3/python_apps/std_err_override /usr/lib/airtime
+    python /tmp/airtime-2.5.1/python_apps/api_clients/install/api_client_install.py
+    cp -R /tmp/airtime-2.5.1/python_apps/std_err_override /usr/lib/airtime
 
-    python /tmp/airtime-2.1.3/python_apps/media-monitor/install/media-monitor-copy-files.py
-    python /tmp/airtime-2.1.3/python_apps/media-monitor/install/media-monitor-initialize.py
-    python /tmp/airtime-2.1.3/python_apps/pypo/install/pypo-copy-files.py
+    python /tmp/airtime-2.5.1/python_apps/media-monitor/install/media-monitor-copy-files.py
+    python /tmp/airtime-2.5.1/python_apps/media-monitor/install/media-monitor-initialize.py
+    python /tmp/airtime-2.5.1/python_apps/pypo/install/pypo-copy-files.py
     
     #TODO remove dependency on debian liquidsoap 
-    python /tmp/airtime-2.1.3/python_apps/pypo/install/pypo-initialize.py || true
+    python /tmp/airtime-2.5.1/python_apps/pypo/install/pypo-initialize.py || true
 
 
     echo "* Installing Liquidsoap"
     $YUMME ocaml ocaml-findlib.x86_64 libao libao-devel libmad libmad-devel taglib taglib-devel lame lame-devel libvorbis libvorbis-devel libtheora libtheora-devel pcre.x86_64 ocaml-camlp4 ocaml-camlp4-devel.x86_64 pcre pcre-devel gcc-c++ libX11 libX11-devel flac vorbis-tools vorbinsgain.x86_64 mp3gain.x86_64
     
-    #wget -O /tmp/pcre-ocaml-6.2.5.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
-    wget -O /tmp/pcre-ocaml-LATEST.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
+    #wget -O /tmp/pcre-ocaml-LATEST.tar.gz http://bitbucket.org/mmottl/pcre-ocaml/downloads/pcre-ocaml-6.2.5.tar.gz
     cd /tmp
-    tar xzf pcre-ocaml-6.2.5.tar.gz
-    cd pcre-ocaml-6.2.5
+    got clone https://github.com/mmottl/pcre-ocaml.git
+    cd pcre-ocaml
     sudo -u pypo make
     make install || true
 
-    wget -O /tmp/liquidsoap-1.0.1-full.tar.bz2 http://sourceforge.net/projects/savonet/files/liquidsoap/1.0.1/liquidsoap-1.0.1-full.tar.bz2
+    #wget -O /tmp/liquidsoap-1.1.1-full.tar.bz2 http://sourceforge.net/projects/savonet/files/liquidsoap/1.0.1/liquidsoap-1.0.1-full.tar.bz2
+    wget -O /tmp/liquidsoap-1.1.1-full.tar.bz2 http://sourceforge.net/projects/savonet/files/liquidsoap/1.1.1/liquidsoap-1.1.1-full.tar.gz
     cd /tmp
-    tar xjf liquidsoap-1.0.1-full.tar.bz2
-    chown -R pypo:pypo /tmp/liquidsoap-1.0.1-full
-    cd /tmp/liquidsoap-1.0.1-full
+    tar xjf liquidsoap-1.1.1-full.tar.bz2
+    chown -R pypo:pypo /tmp/liquidsoap-1.1.1-full
+    cd /tmp/liquidsoap-1.1.1-full
 
     cp PACKAGES.minimal PACKAGES
     sed -i 's/ocaml-flac/#ocaml-flac/g' PACKAGES
@@ -222,14 +222,14 @@ function install() {
 
     echo "Installing icecast2"
     $YUMME libxslt-devel.x86_64
-    wget -O /tmp/icecast-2.3.3.tar.gz http://downloads.xiph.org/releases/icecast/icecast-2.3.3.tar.gz
-    cd /tmp
-    tar xzf icecast-2.3.3.tar.gz
-    chown -R pypo:pypo /tmp/icecast-2.3.3
-    cd /tmp/icecast-2.3.3
-    sudo -u pypo ./configure
-    sudo -u pypo make
-    make install || true
+    #wget -O /tmp/icecast-2.3.3.tar.gz http://downloads.xiph.org/releases/icecast/icecast-2.3.3.tar.gz
+    #cd /tmp
+    #tar xzf icecast-2.3.3.tar.gz
+    #chown -R pypo:pypo /tmp/icecast-2.3.3
+    #cd /tmp/icecast-2.3.3
+    #sudo -u pypo ./configure
+    #sudo -u pypo make
+    #make install || true
 
 
     echo "* Setting up init.d scripts"
@@ -237,7 +237,7 @@ function install() {
 
     #postgresql
 
-    #media-monitor
+    #media-mon:wqitor
 
     #pypo
 
